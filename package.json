@@ -1,16 +1,19 @@
 {
   "author": "Arian Stolwijk (http://github.com/arian)",
-  "name": "coverjs",
+  "contributors": [
+    "Kee-Yip Chan (http://github.com/keeyip)"
+  ],
+  "name": "coverjs-gold",
   "description": "JSCoverage compatible JavaScript code coverage tool",
   "version": "0.0.14",
   "repository": {
-    "url": "git://github.com/arian/CoverJS.git"
+    "url": "git://github.com/keeyip/CoverJS.git"
   },
   "license": "MIT",
   "main": "cover.js",
   "bin": {
-    "coverjs": "./bin/cover.js",
-    "coverjs-report": "./bin/reporter.js"
+    "coverjs-gold": "./bin/cover.js",
+    "coverjs-gold-report": "./bin/reporter.js"
   },
   "dependencies": {
     "esprima": "1.0",

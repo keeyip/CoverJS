@@ -15,6 +15,10 @@ var files = [];
 var dir;
 var recursive = false;
 var excludes = [];
+var debugExcludes = false;
+var regexExclude = /./;
+var debugRecursing = false;
+var debugInstrumenting = false;
 var template;
 var result;
 
@@ -37,6 +41,25 @@ for (var i = 0; i < args.length; i++){
 
 	if (arg == '--recursive' || arg == '-r'){
 		recursive = true;
+		continue;
+	}
+
+    if (arg == '--debug-recursing') {
+        debugRecursing = true;
+        continue;
+    }
+
+    if (arg == '--debug-instrumenting') {
+        debugInstrumenting = true;
+        continue;
+    }
+
+    if (arg == '--debug-excludes') {
+        debugExcludes = true;
+        continue;
+    }
+	if (arg == '--regex-exclude'){
+		regexExclude = new RegExp(args[++i]);
 		continue;
 	}
 
@@ -88,7 +111,7 @@ if (!dir){
 }
 
 // normalize exclude files/directories
-excludes.map(function(dir){
+excludes = excludes.map(function(dir){
 	return path.normalize(dir);
 });
 
@@ -122,7 +145,8 @@ var processFile = function(file, outFile){
 
 				} else if (recursive && stat.isDirectory()){
 
-					console.warn(('Recursing into ' + file).yellow);
+                    if (debugRecursing)
+                        console.warn(('Recursing into ' + file).yellow);
 
 					fs.readdir(file, function(err, files){
 						if (err) throw err;
@@ -131,10 +155,20 @@ var processFile = function(file, outFile){
 
 							var __file = path.normalize(file + '/' + _file);
 							if (_file.indexOf('.') !== 0 && _file != '..' && _file != '.' && excludes.indexOf(__file) == -1){
+                                var fileExtension = __file.split('.').pop();
+                                if (regexExclude.test(__file)) {
+                                    if (debugExcludes)
+                                        console.warn('REGEX EXCLUDE:', __file);
+                                } else if (excludes.indexOf('*.' + fileExtension) >= 0) {
+                                    if (debugExcludes)
+                                        console.warn('EXCLUDE EXTENSION:', __file);
+                                } else {
+                                    if (debugExcludes)
+                                        console.warn('INCLUDED:', __file);
 
-								var fn = processFile(file + '/' + _file, outFile + '/' + _file);
-								if (fn) flow.push(fn);
-
+                                    var fn = processFile(file + '/' + _file, outFile + '/' + _file);
+                                    if (fn) flow.push(fn);
+                                }
 							}
 						});
 
@@ -170,7 +204,8 @@ var processFile = function(file, outFile){
 
 			// instrument the code
 
-			console.warn(('instrumenting ' + file).blue);
+            if (debugInstrumenting)
+                console.warn(('instrumenting ' + file).blue);
 			var instrument = new Instrument(code, {
 				template: template,
 				result: result && path.resolve(result),
