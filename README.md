@@ -3,7 +3,7 @@
 #### Use regex to exclude files and folders
 `--regex-exclude '^third-party-libs|config-scripts|.bak$'`
 
-#### Opt-in for debugging messages
+#### Opt-in to debug
 
 `--debug-recursing`
 
