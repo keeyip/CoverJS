@@ -1,9 +1,14 @@
-# Features
-* `--regex-exclude '^third-party-libs|config-scripts|.bak$'`
-* `--debug-recursing`
-* `--debug-excludes`
-* `--debug-instrumenting`
+# > coverjs-gold
 
-# Binaries
-* coverjs-gold
-* coverjs-gold-report
+#### Use regex to exclude files and folders
+`--regex-exclude '^third-party-libs|config-scripts|.bak$'`
+
+#### Opt-in for debugging messages
+
+`--debug-recursing`
+
+`--debug-excludes`
+
+`--debug-instrumenting`
+
+# > coverjs-gold-report
